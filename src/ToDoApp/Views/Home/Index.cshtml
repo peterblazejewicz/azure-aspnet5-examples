@@ -1,0 +1,28 @@
+@using Microsoft.Extensions.OptionsModel
+@using ToDoApp.Models
+@inject IOptions<DocumentDbOptions> config
+
+<h1>@ViewData["Title"]</h1>
+<h1>ToDo Application<br/> <small>backed by Azure DocumentDb</small></h1>
+<blockquote>
+  <p>To highlight how you can efficiently leverage Azure DocumentDB to store and query JSON documents, this article provides an end-to-end walk-through showing you how to build a todo app using Azure DocumentDB. The tasks will be stored as JSON documents in Azure DocumentDB.</p>
+  <footer>
+    <a href="https://azure.microsoft.com/en-us/documentation/articles/documentdb-dotnet-application/#AddItemIndexView"><cite title="Web application development with ASP.NET MVC using DocumentDB">DOCUMENTATION DOCUMENTDB</cite></a>
+  </footer>
+</blockquote>
+
+<div class="row">
+  <div class="col-lg-12">
+    <h2>DocumentDb configuration:</h2>
+    <dl>
+      <dt>Database:</dt>
+      <dd>@config.Value.Database</dd>
+      <dt>Collection:</dt>
+      <dd>@config.Value.Collection</dd>
+      <dt>EndPoint:</dt>
+      <dd>@config.Value.EndPoint</dd>
+      <dt>AuthKey:</dt>
+      <dd>@config.Value.AuthKey</dd>
+    </dl>
+  </div>
+</div>
