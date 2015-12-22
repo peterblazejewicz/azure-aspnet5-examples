@@ -5,9 +5,6 @@ A port of existing Azure sample app to ASP.NET5
 Note: There is a real stopper to make it work:
 [Missing BCrypt.dll out of the box on .NET 5 + Mono + Linux](https://social.msdn.microsoft.com/Forums/azure/en-US/a4a80fde-5282-480a-b981-2bf5bb5f64c9/missing-bcryptdll-out-of-the-box-on-net-5-mono-linux?forum=AzureDocumentDB)
 
-The example is not finished because of above problem. Consider upvoting here:
-[https://github.com/Azure/azure-documentdb-dotnet/issues/60](https://github.com/Azure/azure-documentdb-dotnet/issues/60)
-
 ## Access configuration
 
 The Azure DocumentDb access configuration is based on layered options, as discussed in:
