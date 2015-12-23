@@ -1,10 +1,10 @@
 extends layout
 
 block content
-  h1= title
-  br
+  .page-header
+    h1= title
 
-  form(action="/completetask", method="post")
+  form.form(action="/completetask", method="post")
     table.table.table-striped.table-bordered
       tr
         td Name
@@ -25,12 +25,23 @@ block content
             td #{month + "/" + day + "/" + year}
             td
               input(type="checkbox", name="#{task.RowKey._}", value="#{!task.completed._}", checked=task.completed._)
-    button.btn(type="submit") Update tasks
+    button.btn.btn-primary(type="submit") Update tasks
   hr
-  form.well(action="/addtask", method="post")
-    label Item Name:
-    input(name="item[name]", type="textbox")
-    label Item Category:
-    input(name="item[category]", type="textbox")
-    br
-    button.btn(type="submit") Add item
+  form.form-horizontal(action="/addtask", method="post")
+    .row
+      .col-sm-4
+        .panel.panel-default
+          .panel-heading
+            p.panel-title Add Item
+          .panel-body
+            .form-group
+              .col-sm-12
+                label(for="item-name") Item Name:
+                input.form-control(id="item-name", name="item[name]", type="textbox", required)
+            .form-group
+              .col-sm-12
+                label(for="item-category") Item Category:
+                input.form-control(id="item-category", name="item[category]", type="textbox", required)
+            
+          .panel-footer
+            button.btn.btn-primary.btn-block(type="submit") Add item
