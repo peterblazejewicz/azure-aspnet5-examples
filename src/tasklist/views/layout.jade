@@ -2,6 +2,10 @@ doctype html
 html
   head
     title= title
+    link(rel='stylesheet', href='/stylesheets/css/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-  body
+  body.app
+    nav.navbar.navbar-default
+      div.navbar-header
+      a.navbar-brand(href='/') My Tasks
     block content
