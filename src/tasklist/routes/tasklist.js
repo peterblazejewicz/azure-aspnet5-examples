@@ -46,4 +46,4 @@ TaskList.prototype = {
       }
     });
   }
-}
+};
