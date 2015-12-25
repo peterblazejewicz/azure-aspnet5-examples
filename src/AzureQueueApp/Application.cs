@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
@@ -24,8 +25,9 @@ namespace AzureQueueApp
         public Application(AzureStorageOptions options)
         {
             this.options = options;
-            Console.WriteLine(JsonConvert.SerializeObject(options));
             storageCredentials = new StorageCredentials(options.AccountName, options.AccountKey);
+            Logger.Get().LogInformation("Azure configuration");
+            Logger.Get().LogInformation($"account: {options.AccountName} key: {options.AccountKey} queue: {options.QueueName}");
             bool useHttps = true;
             // Retrieve storage account from credentials
             storageAccount = new CloudStorageAccount(storageCredentials, useHttps);
@@ -34,15 +36,18 @@ namespace AzureQueueApp
             // Retrieve a reference to a queue
             queue = queueClient.GetQueueReference(options.QueueName);
             // Create the queue if it doesn't already exist
-            queue.CreateIfNotExists();
+            bool created = queue.CreateIfNotExists();
+            Logger.Get().LogInformation($"Queue {queue.Name} CreateIfNotExists={created}");
         }
         public void InsertMessage()
         {
+            Logger.Get().LogInformation("InsertMessage");
             throw new NotImplementedException();
         }
 
         public void PeekMessage()
         {
+            Logger.Get().LogInformation("PeekMessage");
             throw new NotImplementedException();
         }
         private AzureStorageOptions options;

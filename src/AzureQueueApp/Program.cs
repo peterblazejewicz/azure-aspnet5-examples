@@ -1,6 +1,7 @@
 using System;
 using Fclp;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
 
 namespace AzureQueueApp
@@ -13,6 +14,7 @@ namespace AzureQueueApp
         }
         public static void Main(string[] args)
         {
+            Logger.Get().LogInformation("starting");
             try
             {
                 var p = new FluentCommandLineParser<ApplicationOptions>();
@@ -36,9 +38,7 @@ namespace AzureQueueApp
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                Console.WriteLine("Error: {0}", ex.Message);
-                Console.ResetColor();
+                Logger.Get().LogError($"Error: {ex.Message}");
                 Environment.Exit(1);
             }
 
@@ -67,7 +67,7 @@ namespace AzureQueueApp
                     break;
                 case Operation.Unknown:
                 default:
-                    Console.WriteLine("Unknown");
+                    Logger.Get().LogCritical("Unknown option used");
                     break;
             }
         }
