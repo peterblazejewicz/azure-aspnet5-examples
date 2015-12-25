@@ -48,8 +48,8 @@ namespace AzureQueueApp
         {
             var builder = new ConfigurationBuilder();
             builder.AddJsonFile("appsettings.json");
-            builder.AddEnvironmentVariables();
             builder.AddUserSecrets();
+            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
             app = new Application(new AzureStorageOptions
             {
