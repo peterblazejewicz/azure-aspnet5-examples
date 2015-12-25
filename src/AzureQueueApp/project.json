@@ -1,0 +1,36 @@
+{
+	"version": "1.0.0-*",
+	"description": "AzureQueueApp Console Application",
+	"userSecretsId": "aspnet5-AzureQueueApp-c24e84ab-18e7-4fe7-b919-b98d7081445c",
+	"authors": [
+		"@peterblazejewicz"
+	],
+	"tags": [
+		"Azure",
+		"Azure Storage",
+		"Queue",
+		"Storage Queue"
+	],
+	"compilationOptions": {
+		"emitEntryPoint": true
+	},
+	"tooling": {
+		"defaultNamespace": "AzureQueueApp"
+	},
+	"dependencies": {
+		"Microsoft.Extensions.Configuration.UserSecrets": "1.0.0-rc1-final",
+		"Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final",
+		"Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
+		"Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
+		"Microsoft.Extensions.SecretManager": "1.0.0-rc1-final",
+		"WindowsAzure.Storage": "6.2.2-preview",
+		"Newtonsoft.Json": "8.0.1-beta3",
+		"FluentCommandLineParser": "1.4.3"
+	},
+	"commands": {
+		"run": "AzureQueueApp"
+	},
+	"frameworks": {
+		"dnx451": {}
+	}
+}
