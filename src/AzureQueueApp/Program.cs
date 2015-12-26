@@ -91,6 +91,7 @@ namespace AzureQueueApp
 Author: @peterblazejewicz
 Options:
 --operation ChangeMessage		changes a content of single TicketRequest from queue
+--operation GetLength			checks length of the queue
 --operation InsertMessage		inserts single TicketRequest into queue
 --operation PeekMessage			peeks a single TicketRequest from queue
 --operation RemoveMessage		gets a message and deletes it from queue";
