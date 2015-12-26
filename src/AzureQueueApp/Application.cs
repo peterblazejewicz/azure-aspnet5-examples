@@ -23,6 +23,8 @@ namespace AzureQueueApp
         Task InsertMessage();
         // peek a single message from the queue 
         Task PeekMessage();
+        // Removes message from the queue
+        Task RemoveMessage();
     }
 
     public class Application : IApplication
@@ -99,10 +101,36 @@ namespace AzureQueueApp
             CloudQueueMessage msg = await queue.PeekMessageAsync();
             if (msg != null)
             {
-                TicketRequest ticket = await Task.Factory.StartNew(() => 
+                TicketRequest ticket = await Task.Factory.StartNew(() =>
                     JsonConvert.DeserializeObject<TicketRequest>(msg.AsString)
                 );
                 LogTicketRequest(ticket);
+            }
+            else
+            {
+                Logger.Get().LogWarning($"The {queue.Name} appears to be empty");
+            }
+        }
+        /*
+            https://azure.microsoft.com/en-us/documentation/articles/storage-dotnet-how-to-use-queues/
+            Your code de-queues a message from a queue in two steps. When you call GetMessage, you get the next message in a queue. A message returned from GetMessage becomes invisible to any other code reading messages from this queue. By default, this message stays invisible for 30 seconds. To finish removing the message from the queue, you must also call DeleteMessage. This two-step process of removing a message assures that if your code fails to process a message due to hardware or software failure, another instance of your code can get the same message and try again. Your code calls DeleteMessage right after the message has been processed.
+        */
+        public async Task RemoveMessage()
+        {
+            Logger.Get().LogInformation("RemoveMessage");
+            // Get the next message
+            CloudQueueMessage message = await queue.GetMessageAsync();
+            if (message != null)
+            {
+                TicketRequest ticket = await Task.Factory.StartNew(() =>
+                    JsonConvert.DeserializeObject<TicketRequest>(message.AsString)
+                );
+                LogTicketRequest(ticket);
+                Logger.Get().LogInformation("Processing ticket");
+                await Task.Factory.StartNew(() => Thread.Sleep(1000));
+                Logger.Get().LogInformation("Finished processing ticket");
+                await queue.DeleteMessageAsync(message);
+                Logger.Get().LogInformation("Message removed");
             }
             else
             {

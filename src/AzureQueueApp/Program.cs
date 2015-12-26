@@ -83,6 +83,9 @@ namespace AzureQueueApp
                 case Operation.PeekMessage:
                     await app.PeekMessage();
                     break;
+                case Operation.RemoveMessage:
+                    await app.RemoveMessage();
+                    break;
                 case Operation.Unknown:
                 default:
                     Logger.Get().LogCritical("Unknown option used");
@@ -97,6 +100,7 @@ Author: @peterblazejewicz
 Options:
 --operation ChangeMessage		changes a content of single TicketRequest from queue
 --operation InsertMessage		inserts single TicketRequest into queue
---operation PeekMessage			peeks a single TicketRequest from queue";
+--operation PeekMessage			peeks a single TicketRequest from queue
+--operation RemoveMessage		gets a message and deletes it from queue";
     }
 }

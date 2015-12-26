@@ -9,5 +9,6 @@ namespace AzureQueueApp.Models
         InsertMessage = 1,
         PeekMessage = 2,
         ChangeMessage = 3,
+        RemoveMessage = 4,
     }
 }

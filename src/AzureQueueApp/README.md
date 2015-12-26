@@ -23,6 +23,11 @@ dnx run --operation PeekMessage
 ```
 This operation peeks the first (FIFO) ticket request from queue
 
+- RemoveMessage
+```
+dnx run --operation RemoveMessage
+```
+This operation gets a first (FIFO) ticket from queue, process it and delete from queue
 
 ## Example output from running application
 ```
