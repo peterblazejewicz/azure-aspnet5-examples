@@ -17,6 +17,12 @@ dnx run --operation InsertMessage
 ```
 This operation inserts a ticket request object into queue.
 
+- GetLength
+```
+dnx run --operation GetLenght
+```
+This operation retrieves cached queue length
+
 - PeekMessage
 ```
 dnx run --operation PeekMessage

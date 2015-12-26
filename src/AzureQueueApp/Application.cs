@@ -20,6 +20,8 @@ namespace AzureQueueApp
         // change content of message in the queue
         Task ChangeMessage();
         // insert a single message into queue
+        // gets lengths of the queue
+        Task GetLength();
         Task InsertMessage();
         // peek a single message from the queue 
         Task PeekMessage();
@@ -79,6 +81,19 @@ namespace AzureQueueApp
             {
                 Logger.Get().LogWarning($"The {queue.Name} appears to be empty");
             }
+        }
+        /*
+            https://azure.microsoft.com/en-us/documentation/articles/storage-dotnet-how-to-use-queues/
+            You can get an estimate of the number of messages in a queue. The FetchAttributes method asks the Queue service to retrieve the queue attributes, including the message count. The ApproximateMessageCount property returns the last value retrieved by the FetchAttributes method, without calling the Queue service.
+        */
+        public async Task GetLength()
+        {
+            Logger.Get().LogInformation("GetLength");
+            // Fetch the queue attributes.
+            await queue.FetchAttributesAsync();
+            // Retrieve the cached approximate message count.
+            int? cachedMessageCount = queue.ApproximateMessageCount;
+            Logger.Get().LogInformation($"Number of messages in {queue.Name} queue: {cachedMessageCount}");
         }
         public async Task InsertMessage()
         {

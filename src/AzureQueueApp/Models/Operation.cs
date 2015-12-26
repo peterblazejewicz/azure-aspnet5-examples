@@ -10,5 +10,6 @@ namespace AzureQueueApp.Models
         PeekMessage = 2,
         ChangeMessage = 3,
         RemoveMessage = 4,
+        GetLength = 5,
     }
 }

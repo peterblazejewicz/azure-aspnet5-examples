@@ -80,6 +80,9 @@ namespace AzureQueueApp
                 case Operation.InsertMessage:
                     await app.InsertMessage();
                     break;
+                case Operation.GetLength:
+                    await app.GetLength();
+                    break;
                 case Operation.PeekMessage:
                     await app.PeekMessage();
                     break;
