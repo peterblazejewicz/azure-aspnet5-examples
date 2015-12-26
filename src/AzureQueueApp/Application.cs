@@ -19,9 +19,9 @@ namespace AzureQueueApp
         Task<IApplication> InitializeAsync();
         // change content of message in the queue
         Task ChangeMessage();
-        // insert a single message into queue
         // gets lengths of the queue
         Task GetLength();
+        // insert a single message into queue
         Task InsertMessage();
         // peek a single message from the queue 
         Task PeekMessage();
