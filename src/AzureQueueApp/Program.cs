@@ -41,6 +41,7 @@ namespace AzureQueueApp
             catch (Exception ex)
             {
                 Logger.Get().LogError($"Error: {ex.Message}");
+                Logger.Get().LogInformation(ex.StackTrace);
                 Environment.Exit(1);
             }
 
