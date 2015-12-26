@@ -73,6 +73,9 @@ namespace AzureQueueApp
             // execute
             switch (options.Operation)
             {
+                case Operation.ChangeMessage:
+                    app.ChangeMessage();
+                    break;
                 case Operation.InsertMessage:
                     app.InsertMessage();
                     break;
@@ -91,10 +94,8 @@ namespace AzureQueueApp
         private const string HELP = @"Azure Queue Storage example application.
 Author: @peterblazejewicz
 Options:
+--operation ChangeMessage		changes a content of single TicketRequest from queue
 --operation InsertMessage		inserts single TicketRequest into queue
---operation PeekMessage			peeks a single TicketRequest from queue
---operation PeekMessages		peeks a list of TicketRequests from queue
---operation GetMessage			gets a single TicketRequest from queue
---operation GetMessages			gets a set of TicketRequests from queue";
+--operation PeekMessage			peeks a single TicketRequest from queue";
     }
 }

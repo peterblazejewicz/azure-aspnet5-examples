@@ -14,12 +14,14 @@ namespace AzureQueueApp
 	*/
     public interface IApplication
     {
+        // change content of message in the queue
+        void ChangeMessage();
         // insert a single message into queue
         void InsertMessage();
         // peek a single message from the queue 
         void PeekMessage();
     }
-    
+
     public class Application : IApplication
     {
         public Application(AzureStorageOptions options)
@@ -38,6 +40,31 @@ namespace AzureQueueApp
             // Create the queue if it doesn't already exist
             bool created = queue.CreateIfNotExists();
             Logger.Get().LogInformation($"Queue {queue.Name} CreateIfNotExists={created}");
+        }
+        public void ChangeMessage()
+        {
+            Logger.Get().LogInformation("ChangeMessage");
+            // Peek at the next message
+            CloudQueueMessage message = queue.GetMessage();
+            if (message != null)
+            {
+                TicketRequest ticket = JsonConvert.DeserializeObject<TicketRequest>(message.AsString);
+                LogTicketRequest(ticket);
+                // add a free ticket :)
+                ticket.NumberOfTickets = ticket.NumberOfTickets + 1;
+
+                string json = JsonConvert.SerializeObject(ticket);
+                message.SetMessageContent(json);
+                queue.UpdateMessage(message,
+                    TimeSpan.FromSeconds(60.0),
+                    MessageUpdateFields.Content | MessageUpdateFields.Visibility);
+                // log change ticket
+                LogTicketRequest(ticket);
+            }
+            else
+            {
+                Logger.Get().LogWarning($"The {queue.Name} appears to be empty");
+            }
         }
         public void InsertMessage()
         {
