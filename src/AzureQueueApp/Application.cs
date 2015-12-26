@@ -5,6 +5,7 @@ using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 using AzureQueueApp.Models;
+using GenFu;
 
 namespace AzureQueueApp
 {
@@ -41,13 +42,7 @@ namespace AzureQueueApp
         public void InsertMessage()
         {
             Logger.Get().LogInformation("InsertMessage");
-            TicketRequest ticket = new TicketRequest
-            {
-                TicketId = (int)DateTime.UtcNow.Ticks,
-                OrderDate = DateTime.UtcNow,
-                Email = "peter@example.com",
-                NumberOfTickets = (new Random()).Next(1, 10)
-            };
+            TicketRequest ticket = A.New<TicketRequest>();
             string json = JsonConvert.SerializeObject(ticket);
             // Create a message and add it to the queue.
             CloudQueueMessage message = new CloudQueueMessage(json);
