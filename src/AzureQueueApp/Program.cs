@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AzureQueueApp.Models;
 using Fclp;
 using GenFu;
@@ -28,7 +29,7 @@ namespace AzureQueueApp
                 var results = p.Parse(args);
                 if (results.HasErrors == false)
                 {
-                    RunApplication(p.Object);
+                    RunApplication(p.Object).Wait();
                 }
                 else
                 {
@@ -47,14 +48,14 @@ namespace AzureQueueApp
 
         }
 
-        public static void RunApplication(ApplicationOptions options)
+        public static async Task RunApplication(ApplicationOptions options)
         {
             var builder = new ConfigurationBuilder();
             builder.AddJsonFile("Configs/appsettings.json");
             builder.AddUserSecrets();
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
-            app = new Application(new AzureStorageOptions
+            app = await Application.CreateAsync(new AzureStorageOptions
             {
                 AccountName = Configuration.GetSection("Azure:Storage")["AccountName"],
                 AccountKey = Configuration.GetSection("Azure:Storage")["AccountKey"],
@@ -74,13 +75,13 @@ namespace AzureQueueApp
             switch (options.Operation)
             {
                 case Operation.ChangeMessage:
-                    app.ChangeMessage();
+                    await app.ChangeMessage();
                     break;
                 case Operation.InsertMessage:
-                    app.InsertMessage();
+                    await app.InsertMessage();
                     break;
                 case Operation.PeekMessage:
-                    app.PeekMessage();
+                    await app.PeekMessage();
                     break;
                 case Operation.Unknown:
                 default:

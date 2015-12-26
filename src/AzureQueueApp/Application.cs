@@ -6,6 +6,8 @@ using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 using AzureQueueApp.Models;
 using GenFu;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace AzureQueueApp
 {
@@ -14,22 +16,31 @@ namespace AzureQueueApp
 	*/
     public interface IApplication
     {
+        Task<IApplication> InitializeAsync();
         // change content of message in the queue
-        void ChangeMessage();
+        Task ChangeMessage();
         // insert a single message into queue
-        void InsertMessage();
+        Task InsertMessage();
         // peek a single message from the queue 
-        void PeekMessage();
+        Task PeekMessage();
     }
 
     public class Application : IApplication
     {
-        public Application(AzureStorageOptions options)
+        public static Task<IApplication> CreateAsync(AzureStorageOptions options)
+        {
+            var app = new Application(options);
+            return app.InitializeAsync();
+        }
+        Application(AzureStorageOptions options)
         {
             this.options = options;
             storageCredentials = new StorageCredentials(options.AccountName, options.AccountKey);
             Logger.Get().LogInformation("Azure configuration");
             Logger.Get().LogInformation($"account: {options.AccountName} key: {options.AccountKey} queue: {options.QueueName}");
+        }
+        public async Task<IApplication> InitializeAsync()
+        {
             bool useHttps = true;
             // Retrieve storage account from credentials
             storageAccount = new CloudStorageAccount(storageCredentials, useHttps);
@@ -38,24 +49,25 @@ namespace AzureQueueApp
             // Retrieve a reference to a queue
             queue = queueClient.GetQueueReference(options.QueueName);
             // Create the queue if it doesn't already exist
-            bool created = queue.CreateIfNotExists();
+            bool created = await queue.CreateIfNotExistsAsync();
             Logger.Get().LogInformation($"Queue {queue.Name} CreateIfNotExists={created}");
+            return this;
         }
-        public void ChangeMessage()
+        public async Task ChangeMessage()
         {
             Logger.Get().LogInformation("ChangeMessage");
             // Peek at the next message
-            CloudQueueMessage message = queue.GetMessage();
+            CloudQueueMessage message = await queue.GetMessageAsync();
             if (message != null)
             {
-                TicketRequest ticket = JsonConvert.DeserializeObject<TicketRequest>(message.AsString);
+                TicketRequest ticket = await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<TicketRequest>(message.AsString));
                 LogTicketRequest(ticket);
                 // add a free ticket :)
                 ticket.NumberOfTickets = ticket.NumberOfTickets + 1;
 
-                string json = JsonConvert.SerializeObject(ticket);
+                string json = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(ticket));
                 message.SetMessageContent(json);
-                queue.UpdateMessage(message,
+                await queue.UpdateMessageAsync(message,
                     TimeSpan.FromSeconds(60.0),
                     MessageUpdateFields.Content | MessageUpdateFields.Visibility);
                 // log change ticket
@@ -66,25 +78,30 @@ namespace AzureQueueApp
                 Logger.Get().LogWarning($"The {queue.Name} appears to be empty");
             }
         }
-        public void InsertMessage()
+        public async Task InsertMessage()
         {
             Logger.Get().LogInformation("InsertMessage");
             TicketRequest ticket = A.New<TicketRequest>();
-            string json = JsonConvert.SerializeObject(ticket);
+            string json = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(ticket));
             // Create a message and add it to the queue.
             CloudQueueMessage message = new CloudQueueMessage(json);
-            queue.AddMessage(message);
+            // Async enqueue the message
+            await Task.Factory.StartNew(() => queue.AddMessage(message));
+            // @see https://github.com/Azure/azure-storage-net/issues/220
+            // await queue.AddMessageAsync(message);
             LogTicketRequest(ticket);
         }
 
-        public void PeekMessage()
+        public async Task PeekMessage()
         {
             Logger.Get().LogInformation("PeekMessage");
             // Peek at the next message
-            CloudQueueMessage msg = queue.PeekMessage();
+            CloudQueueMessage msg = await queue.PeekMessageAsync();
             if (msg != null)
             {
-                TicketRequest ticket = JsonConvert.DeserializeObject<TicketRequest>(msg.AsString);
+                TicketRequest ticket = await Task.Factory.StartNew(() => 
+                    JsonConvert.DeserializeObject<TicketRequest>(msg.AsString)
+                );
                 LogTicketRequest(ticket);
             }
             else
