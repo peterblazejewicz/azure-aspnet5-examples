@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Auth;
@@ -42,13 +39,44 @@ namespace AzureQueueApp
         public void InsertMessage()
         {
             Logger.Get().LogInformation("InsertMessage");
-            throw new NotImplementedException();
+            TicketRequest ticket = new TicketRequest
+            {
+                TicketId = (int)DateTime.UtcNow.Ticks,
+                OrderDate = DateTime.UtcNow,
+                Email = "peter@example.com",
+                NumberOfTickets = (new Random()).Next(1, 10)
+            };
+            string json = JsonConvert.SerializeObject(ticket);
+            // Create a message and add it to the queue.
+            CloudQueueMessage message = new CloudQueueMessage(json);
+            queue.AddMessage(message);
+            LogTicketRequest(ticket);
         }
 
         public void PeekMessage()
         {
             Logger.Get().LogInformation("PeekMessage");
-            throw new NotImplementedException();
+            // Peek at the next message
+            CloudQueueMessage msg = queue.PeekMessage();
+            if (msg != null)
+            {
+                TicketRequest ticket = JsonConvert.DeserializeObject<TicketRequest>(msg.AsString);
+                LogTicketRequest(ticket);
+            }
+            else
+            {
+                Logger.Get().LogWarning($"The {queue.Name} appears to be empty");
+            }
+        }
+
+        private void LogTicketRequest(TicketRequest ticket)
+        {
+            if (ticket == null)
+            {
+                Logger.Get().LogWarning("Failed to deserialize ticket");
+                return;
+            };
+            Logger.Get().LogInformation($"Ticket: #{ticket.TicketId} for: {ticket.Email} date: {ticket.OrderDate} total: {ticket.NumberOfTickets}");
         }
         private AzureStorageOptions options;
         private StorageCredentials storageCredentials;
