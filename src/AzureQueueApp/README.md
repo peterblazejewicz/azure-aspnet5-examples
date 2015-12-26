@@ -5,11 +5,18 @@ An example console application based on topics discussed in [How to use Queue st
 ## Implementation
 
 The application showcases different operations on the Azure Storage Queue. You could use following command line switches to execute implemented operations:
+- ChangeMessage
+```
+dnx run --operation ChangeMessage
+```
+This operation modify a ticket from queue (we add a bonus, free ticket to the order)
+
 - InsertMessage
 ```
 dnx run --operation InsertMessage
 ```
 This operation inserts a ticket request object into queue.
+
 - PeekMessage
 ```
 dnx run --operation PeekMessage
