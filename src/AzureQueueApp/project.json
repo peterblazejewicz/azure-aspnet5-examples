@@ -27,7 +27,8 @@
 		"Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
 		"WindowsAzure.Storage": "6.2.2-preview",
 		"Newtonsoft.Json": "8.0.1-beta3",
-		"FluentCommandLineParser": "1.4.3"
+		"FluentCommandLineParser": "1.4.3",
+		"GenFu": "1.0.4"
 	},
 	"commands": {
 		"run": "AzureQueueApp"
