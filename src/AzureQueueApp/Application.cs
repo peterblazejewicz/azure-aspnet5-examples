@@ -19,6 +19,8 @@ namespace AzureQueueApp
         Task<IApplication> InitializeAsync();
         // change content of message in the queue
         Task ChangeMessage();
+        // clears all messages from the queue
+        Task ClearMessages();
         // gets lengths of the queue
         Task GetLength();
         // insert a single message into queue
@@ -81,6 +83,12 @@ namespace AzureQueueApp
             {
                 Logger.Get().LogWarning($"The {queue.Name} appears to be empty");
             }
+        }
+        public async Task ClearMessages()
+        {
+            Logger.Get().LogInformation("ClearMessages");
+            await queue.ClearAsync();
+            Logger.Get().LogInformation("Cleared");
         }
         /*
             https://azure.microsoft.com/en-us/documentation/articles/storage-dotnet-how-to-use-queues/

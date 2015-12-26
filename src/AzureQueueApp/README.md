@@ -11,6 +11,12 @@ dnx run --operation ChangeMessage
 ```
 This operation modify a ticket from queue (we add a bonus, free ticket to the order)
 
+- ClearMessages
+```
+dnx run --operation ClearMessages
+```
+This operations empties the queue removing all non-processed tickets.
+
 - InsertMessage
 ```
 dnx run --operation InsertMessage

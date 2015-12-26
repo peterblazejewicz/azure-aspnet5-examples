@@ -11,5 +11,6 @@ namespace AzureQueueApp.Models
         ChangeMessage = 3,
         RemoveMessage = 4,
         GetLength = 5,
+        ClearMessages = 6,
     }
 }

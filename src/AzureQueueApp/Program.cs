@@ -66,6 +66,9 @@ namespace AzureQueueApp
                 case Operation.ChangeMessage:
                     await app.ChangeMessage();
                     break;
+                case Operation.ClearMessages:
+                    await app.ClearMessages();
+                    break;
                 case Operation.InsertMessage:
                     await app.InsertMessage();
                     break;
@@ -91,6 +94,7 @@ namespace AzureQueueApp
 Author: @peterblazejewicz
 Options:
 --operation ChangeMessage		changes a content of single TicketRequest from queue
+--operation ClearMessages		changes a content of single TicketRequest from queue
 --operation GetLength			checks length of the queue
 --operation InsertMessage		inserts single TicketRequest into queue
 --operation PeekMessage			peeks a single TicketRequest from queue
