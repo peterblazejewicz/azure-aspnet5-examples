@@ -13,7 +13,7 @@ namespace AzureQueueApp
                 var factory = new LoggerFactory();
                 Logger._logger = factory.CreateLogger<Program>();
                 var loggingConfiguration = new ConfigurationBuilder()
-                    .AddJsonFile("logging.json")
+                    .AddJsonFile("Configs/logging.json")
                     .Build();
                 factory.AddConsole(loggingConfiguration);
             }

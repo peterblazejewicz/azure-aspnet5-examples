@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
+using AzureQueueApp.Models;
 
 namespace AzureQueueApp
 {
@@ -17,6 +18,7 @@ namespace AzureQueueApp
         // peek a single message from the queue 
         void PeekMessage();
     }
+    
     public class Application : IApplication
     {
         public Application(AzureStorageOptions options)

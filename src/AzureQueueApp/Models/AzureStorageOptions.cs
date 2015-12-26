@@ -1,4 +1,4 @@
-namespace AzureQueueApp
+namespace AzureQueueApp.Models
 {
     public class AzureStorageOptions
     {

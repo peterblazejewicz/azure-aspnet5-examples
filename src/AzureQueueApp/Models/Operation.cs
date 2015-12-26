@@ -1,6 +1,6 @@
 using System;
 
-namespace AzureQueueApp
+namespace AzureQueueApp.Models
 {
     [Flags]
 	public enum Operation

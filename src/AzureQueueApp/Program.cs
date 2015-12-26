@@ -1,4 +1,5 @@
 using System;
+using AzureQueueApp.Models;
 using Fclp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -47,7 +48,7 @@ namespace AzureQueueApp
         public static void RunApplication(ApplicationOptions options)
         {
             var builder = new ConfigurationBuilder();
-            builder.AddJsonFile("appsettings.json");
+            builder.AddJsonFile("Configs/appsettings.json");
             builder.AddUserSecrets();
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
