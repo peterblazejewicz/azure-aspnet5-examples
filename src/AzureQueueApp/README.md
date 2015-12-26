@@ -5,6 +5,13 @@ An example console application based on topics discussed in [How to use Queue st
 ## Implementation
 
 The application showcases different operations on the Azure Storage Queue. You could use following command line switches to execute implemented operations:
+
+- BatchRemove
+```
+dnx run --operation BatchRemove
+```
+This operations removes and processes a set of Tickets from the queue in batch operation (up to 20 tickets)
+
 - ChangeMessage
 ```
 dnx run --operation ChangeMessage

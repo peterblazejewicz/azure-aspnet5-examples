@@ -63,6 +63,9 @@ namespace AzureQueueApp
             // execute
             switch (options.Operation)
             {
+                case Operation.BatchRemove:
+                    await app.BatchRemove();
+                    break;
                 case Operation.ChangeMessage:
                     await app.ChangeMessage();
                     break;
@@ -93,6 +96,7 @@ namespace AzureQueueApp
         private const string HELP = @"Azure Queue Storage example application.
 Author: @peterblazejewicz
 Options:
+--operation BatchRemove  		removes and process 20 tickets in batch operation
 --operation ChangeMessage		changes a content of single TicketRequest from queue
 --operation ClearMessages		changes a content of single TicketRequest from queue
 --operation GetLength			checks length of the queue

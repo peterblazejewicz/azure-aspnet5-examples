@@ -8,6 +8,8 @@ using AzureQueueApp.Models;
 using GenFu;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace AzureQueueApp
 {
@@ -17,6 +19,8 @@ namespace AzureQueueApp
     public interface IApplication
     {
         Task<IApplication> InitializeAsync();
+        // removes/processes batch of up to 20 tickets at once
+        Task BatchRemove();
         // change content of message in the queue
         Task ChangeMessage();
         // clears all messages from the queue
@@ -58,6 +62,46 @@ namespace AzureQueueApp
             bool created = await queue.CreateIfNotExistsAsync();
             Logger.Get().LogInformation($"Queue {queue.Name} CreateIfNotExists={created}");
             return this;
+        }
+        /*
+            https://azure.microsoft.com/en-us/documentation/articles/storage-dotnet-how-to-use-queues/#leverage-additional-options-for-de-queuing-messages
+            There are two ways you can customize message retrieval from a queue. First, you can get a batch of messages (up to 32). Second, you can set a longer or shorter invisibility timeout, allowing your code more or less time to fully process each message. The following code example uses the GetMessages method to get 20 messages in one call. Then it processes each message using a foreach loop. It also sets the invisibility timeout to five minutes for each message. Note that the 5 minutes starts for all messages at the same time, so after 5 minutes have passed since the call to GetMessages, any messages which have not been deleted will become visible again.
+        */
+        public async Task BatchRemove()
+        {
+            Logger.Get().LogInformation("BatchRemove");
+            // get 20 messages async
+            // https://channel9.msdn.com/Shows/Azure-Friday/Azure-Queues-103-Batch-Processing-with-Mark-Simms
+            IEnumerable<CloudQueueMessage> messages = await queue.GetMessagesAsync(20, TimeSpan.FromMinutes(5), null, null);
+            if (messages.Any())
+            {
+                int counter = 1;
+                foreach (var message in messages)
+                {
+                    try
+                    {
+                        Logger.Get().LogInformation($"Processing ticket {counter}");
+                        TicketRequest ticket = await Task.Factory.StartNew(() =>
+                    JsonConvert.DeserializeObject<TicketRequest>(message.AsString)
+                );
+                        LogTicketRequest(ticket);
+                        await Task.Factory.StartNew(() => Thread.Sleep(1000));
+                        Logger.Get().LogInformation("Finished processing ticket");
+                        await queue.DeleteMessageAsync(message);
+                        Logger.Get().LogInformation("Message removed");
+                        counter++;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Get().LogError($"Error: {ex.Message}");
+                    }
+                }
+                Logger.Get().LogInformation("All messages processed");
+            }
+            else
+            {
+                Logger.Get().LogWarning($"The {queue.Name} appears to be empty");
+            }
         }
         public async Task ChangeMessage()
         {
