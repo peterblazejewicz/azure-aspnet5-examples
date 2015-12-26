@@ -98,6 +98,16 @@ namespace AzureQueueApp
         public async Task InsertMessage()
         {
             Logger.Get().LogInformation("InsertMessage");
+            // GenFu configuration specific for our example
+            A.Configure<TicketRequest>()
+                .Fill(t => t.OrderDate)
+                .AsFutureDate();
+            A.Configure<TicketRequest>()
+                .Fill(t => t.NumberOfTickets)
+                .WithinRange(1, 10);
+            A.Configure<TicketRequest>()
+                .Fill(t => t.Email)
+                .AsEmailAddressForDomain("example.com");
             TicketRequest ticket = A.New<TicketRequest>();
             string json = await Task.Factory.StartNew(() => JsonConvert.SerializeObject(ticket));
             // Create a message and add it to the queue.

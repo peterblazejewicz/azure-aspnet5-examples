@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using AzureQueueApp.Models;
 using Fclp;
-using GenFu;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.PlatformAbstractions;
@@ -61,16 +60,6 @@ namespace AzureQueueApp
                 AccountKey = Configuration.GetSection("Azure:Storage")["AccountKey"],
                 QueueName = Configuration.GetSection("Azure:Storage")["QueueName"]
             });
-            // GenFu configuration specific for our example
-            A.Configure<TicketRequest>()
-                .Fill(t => t.OrderDate)
-                .AsFutureDate();
-            A.Configure<TicketRequest>()
-                .Fill(t => t.NumberOfTickets)
-                .WithinRange(1, 10);
-            A.Configure<TicketRequest>()
-                .Fill(t => t.Email)
-                .AsEmailAddressForDomain("example.com");
             // execute
             switch (options.Operation)
             {
