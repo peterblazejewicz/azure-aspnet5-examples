@@ -1,13 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using AzureTableApp.Models;
-using GenFu;
 using Microsoft.Extensions.Configuration;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Auth;
-using Microsoft.WindowsAzure.Storage.Table;
-using AzureTableApp.Models;
-using Newtonsoft.Json;
+using Fclp;
 
 namespace AzureTableApp
 {
@@ -15,32 +10,62 @@ namespace AzureTableApp
     {
         public static void Main(string[] args)
         {
-			RunApplication(args).Wait();	
+            var p = new FluentCommandLineParser<ApplicationOptions>();
+            p.Setup<Operation>(options => options.Operation)
+                    .As('o', "operation")
+                    .Required();
+            p.SetupHelp("?", "help")
+                .Callback(text => Console.WriteLine(HELP_BANNER));
+            var results = p.Parse(args);
+            if (results.HasErrors == false)
+            {
+                RunApplication(p.Object.Operation).Wait();
+            }
+            else
+            {
+                p.HelpOption.ShowHelp(p.Options);
+            }
         }
-		public static async Task RunApplication(string[] args)
-		{
-			try {
-				// configuration
-				var builder = new ConfigurationBuilder()
-					.AddJsonFile("Configs/appsettings.json")
-					.AddUserSecrets()
-					.AddEnvironmentVariables();
-				Configuration = builder.Build();
-				// options 
-				ConfigurationBinder.Bind(Configuration.GetSection("Azure:Storage"), options);
-				// application
-				var app = await Application.CreateAsync(options);
-				Console.WriteLine("Press any key to exit ...");
-            	Console.Read();
-				Environment.Exit(0);			
-			} catch(Exception ex)
-			{
-				Console.WriteLine(ex.Message);
-				Console.WriteLine(ex.StackTrace);
-				Environment.Exit(-1);
-			}
-		}
-		private static AzureStorageOptions options { get; set; } = new AzureStorageOptions();
-		private static IConfiguration Configuration { get; set; }
+        public static async Task RunApplication(Operation operation)
+        {
+            try
+            {
+                // configuration
+                var builder = new ConfigurationBuilder()
+                    .AddJsonFile("Configs/appsettings.json")
+                    .AddUserSecrets()
+                    .AddEnvironmentVariables();
+                Configuration = builder.Build();
+                // options 
+                ConfigurationBinder.Bind(Configuration.GetSection("Azure:Storage"), options);
+                // application
+                var app = await Application.CreateAsync(options);
+                switch (operation)
+                {
+                    default:
+                        Console.WriteLine(HELP_BANNER);
+                        break;
+
+                }
+                Console.WriteLine("Press any key to exit ...");
+                Console.Read();
+                Environment.Exit(0);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                Environment.Exit(-1);
+            }
+        }
+        private static AzureStorageOptions options { get; set; } = new AzureStorageOptions();
+        private static IConfiguration Configuration { get; set; }
+        private const string HELP_BANNER = @"Azure Storage Table example application
+@author: @peterblazejewicz
+
+Options:
+-o/--operation AddEntity		Adds Customer entity to storage table
+-h/--help				Shows usage information";
+
     }
 }
