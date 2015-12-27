@@ -5,6 +5,6 @@ namespace AzureTableApp.Models
 	*/
     public enum Operation
     {
-		
+		AddEntity = 1
     }
 }

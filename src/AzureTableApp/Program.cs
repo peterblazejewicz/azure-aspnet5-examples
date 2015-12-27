@@ -45,6 +45,9 @@ namespace AzureTableApp
                 var app = await Application.CreateAsync(options);
                 switch (operation)
                 {
+                    case Operation.AddEntity:
+                        await app.AddEntity();
+                        break;
                     default:
                         Console.WriteLine(HELP_BANNER);
                         break;
