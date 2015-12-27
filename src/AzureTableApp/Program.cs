@@ -1,10 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using AzureTableApp.Models;
+using GenFu;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
+using AzureTableApp.Models;
+using Newtonsoft.Json;
 
 namespace AzureTableApp
 {
@@ -25,7 +28,7 @@ namespace AzureTableApp
 				Configuration = builder.Build();
 				// options 
 				ConfigurationBinder.Bind(Configuration.GetSection("Azure:Storage"), options);
-				// appliation
+				// application
 				var app = await Application.CreateAsync(options);
 				Console.WriteLine("Press any key to exit ...");
             	Console.Read();
