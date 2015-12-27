@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using AzureTableApp.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
@@ -22,6 +23,8 @@ namespace AzureTableApp
         Application(AzureStorageOptions options) { Options = options; }
         public async Task<IApplication> InitializeAsync()
         {
+            Log.LogInformation("Initializing Table storage access");
+            Log.LogInformation($"Azure options: AccountName:{Options.AccountName} AccessKey:{Options.AccessKey} TableName:{Options.TableName}");
             // storage credentials from IOptions
             StorageCredentials credentials = new StorageCredentials(Options.AccountName, Options.AccessKey);
             // Retrieve storage account from credentials
@@ -32,11 +35,20 @@ namespace AzureTableApp
             table = tableClient.GetTableReference(Options.TableName);
             // Create the CloudTable if it does not exist
             bool created = await table.CreateIfNotExistsAsync();
+            if (created == true)
+            {
+                Log.LogInformation($"Table {Options.TableName} created");
+            }
+            else
+            {
+                Log.LogInformation($"Table {Options.TableName} already exists");
+            }
             return this;
         }
         //
         private AzureStorageOptions Options { get; }
         CloudTable table = null;
+        private ILogger Log { get; } = Logger.Get();
 
     }
 }
