@@ -16,6 +16,7 @@ namespace AzureTableApp
         Task AddEntity();
         Task AllEntities();
         Task InsertBatch();
+        Task SingleEntity();
     }
     public class Application : IApplication
     {
@@ -114,6 +115,26 @@ namespace AzureTableApp
                     Log.LogInformation("Added: " + JsonConvert.SerializeObject(result.Result));
                 }
             }
+        }
+        /*
+          https://azure.microsoft.com/en-us/documentation/articles/vs-storage-aspnet5-getting-started-tables/
+          You can write a query to get a single, specific entity. The following code uses a TableOperation object to specify a customer named 'Bennett Smith'. This method returns just one entity, rather than a collection, and the returned value in TableResult.Result is a CustomerEntity object. Specifying both partition and row keys in a query is the fastest way to retrieve a single entity from the Table service.
+        */
+        public async Task SingleEntity()
+        {
+          Log.LogInformation("SingleEntity");
+          // Create a retrieve operation that takes a customer entity.
+          TableOperation retrieveOperation = TableOperation.Retrieve<CustomerEntity>("Smith", "Bennett");
+          // Execute the retrieve operation.
+          TableResult retrievedResult = await peopleTable.ExecuteAsync(retrieveOperation);
+          // Print the phone number of the result.
+          if (retrievedResult.Result != null) {
+            CustomerEntity customer = (CustomerEntity)retrievedResult.Result;
+            Log.LogInformation($"Retrieved phone number: {customer.PhoneNumber}");            
+          } else 
+          {
+            Log.LogWarning("The phone number could not be retrieved."); 
+          }
         }
         //
         private AzureStorageOptions Options { get; }

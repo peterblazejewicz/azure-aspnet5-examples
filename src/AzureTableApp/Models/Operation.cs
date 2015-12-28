@@ -7,6 +7,7 @@ namespace AzureTableApp.Models
     {
 		AddEntity = 1,
     InsertBatch = 2,
-    AllEntities = 3
+    AllEntities = 3,
+    SingleEntity = 4,
     }
 }

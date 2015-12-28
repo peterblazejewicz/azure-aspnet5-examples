@@ -54,6 +54,9 @@ namespace AzureTableApp
                     case Operation.InsertBatch:
                         await app.InsertBatch();
                         break;
+                    case Operation.SingleEntity:
+                        await app.SingleEntity();
+                        break;
                     default:
                         Console.WriteLine(HELP_BANNER);
                         break;
@@ -80,6 +83,7 @@ Options:
 -o/--operation AddEntity		Adds Customer entity to storage table
 -o/--operation AllEntities	Lists all entities in storage table
 -o/--operation InsertBatch  Adds batch of Customer entities
+-o/--operation SingleEntity Gets single Customer entity from table
 -h/--help				Shows usage information";
 
     }
