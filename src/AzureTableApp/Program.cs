@@ -48,6 +48,9 @@ namespace AzureTableApp
                     case Operation.AddEntity:
                         await app.AddEntity();
                         break;
+                    case Operation.AllEntities:
+                        await app.AllEntities();
+                        break;
                     case Operation.InsertBatch:
                         await app.InsertBatch();
                         break;
@@ -75,6 +78,7 @@ namespace AzureTableApp
 
 Options:
 -o/--operation AddEntity		Adds Customer entity to storage table
+-o/--operation AllEntities	Lists all entities in storage table
 -o/--operation InsertBatch  Adds batch of Customer entities
 -h/--help				Shows usage information";
 

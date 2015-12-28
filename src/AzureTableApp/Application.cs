@@ -14,6 +14,7 @@ namespace AzureTableApp
     {
         Task<IApplication> InitializeAsync();
         Task AddEntity();
+        Task AllEntities();
         Task InsertBatch();
     }
     public class Application : IApplication
@@ -63,6 +64,27 @@ namespace AzureTableApp
             // Execute the insert operation.
             var results = await peopleTable.ExecuteAsync(insertOperation);
             Log.LogInformation("Added: " + JsonConvert.SerializeObject(results.Result));
+        }
+        /*
+          https://azure.microsoft.com/en-us/documentation/articles/vs-storage-aspnet5-getting-started-tables/
+          To query a table for all of the entities in a partition, use a TableQuery object. The following code example specifies a filter for entities where 'Smith' is the partition key. This example prints the fields of each entity in the query results to the console.
+        */
+        public async Task AllEntities()
+        {
+          // Construct the query operation for all customer entities where PartitionKey="Smith".
+          TableQuery<CustomerEntity> query = new TableQuery<CustomerEntity>()
+            .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "Smith"));
+          // Print the fields for each customer.
+          TableContinuationToken token = null;
+          do
+            {
+                TableQuerySegment<CustomerEntity> resultSegment = await peopleTable.ExecuteQuerySegmentedAsync(query, token);
+                token = resultSegment.ContinuationToken;
+                foreach (CustomerEntity entity in resultSegment.Results)
+                {
+                    Log.LogInformation($"{entity.PartitionKey}, {entity.RowKey}\t{entity.Email}\t{entity.PhoneNumber}");
+                }
+            } while (token != null);
         }
         /*
           https://azure.microsoft.com/en-us/documentation/articles/vs-storage-aspnet5-getting-started-tables/
