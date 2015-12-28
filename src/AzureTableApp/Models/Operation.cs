@@ -5,6 +5,7 @@ namespace AzureTableApp.Models
 	*/
     public enum Operation
     {
-		AddEntity = 1
+		AddEntity = 1,
+    InsertBatch = 2
     }
 }

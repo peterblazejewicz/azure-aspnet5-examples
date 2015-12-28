@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AzureTableApp.Models;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,8 @@ namespace AzureTableApp
     public interface IApplication
     {
         Task<IApplication> InitializeAsync();
-		Task AddEntity();
+        Task AddEntity();
+        Task InsertBatch();
     }
     public class Application : IApplication
     {
@@ -47,21 +49,50 @@ namespace AzureTableApp
             }
             return this;
         }
-		/*
-			https://azure.microsoft.com/en-us/documentation/articles/vs-storage-aspnet5-getting-started-tables/
-			Table operations involving entities are done using the CloudTable object you created earlier in "Access tables in code." The TableOperation object represents the operation to be done. The following code example shows how to create a CloudTable object and a CustomerEntity object. To prepare the operation, a TableOperation is created to insert the customer entity into the table. Finally, the operation is executed by calling CloudTable.ExecuteAsync.
-		*/
-		public async Task AddEntity()
-		{
-			Log.LogInformation("AddEntity");
-			// Create a new customer entity.
-			CustomerEntity entity = Customer.CreateCustomerEntity();
-			// Create the TableOperation that inserts the customer entity.
-			TableOperation insertOperation = TableOperation.Insert(entity);
-			// Execute the insert operation.
-			var results = await peopleTable.ExecuteAsync(insertOperation);
-			Log.LogInformation("Added: " + JsonConvert.SerializeObject(results.Result));	
-		}
+        /*
+          https://azure.microsoft.com/en-us/documentation/articles/vs-storage-aspnet5-getting-started-tables/
+          Table operations involving entities are done using the CloudTable object you created earlier in "Access tables in code." The TableOperation object represents the operation to be done. The following code example shows how to create a CloudTable object and a CustomerEntity object. To prepare the operation, a TableOperation is created to insert the customer entity into the table. Finally, the operation is executed by calling CloudTable.ExecuteAsync.
+        */
+        public async Task AddEntity()
+        {
+            Log.LogInformation("AddEntity");
+            // Create a new customer entity.
+            CustomerEntity entity = Customer.CreateCustomerEntity();
+            // Create the TableOperation that inserts the customer entity.
+            TableOperation insertOperation = TableOperation.Insert(entity);
+            // Execute the insert operation.
+            var results = await peopleTable.ExecuteAsync(insertOperation);
+            Log.LogInformation("Added: " + JsonConvert.SerializeObject(results.Result));
+        }
+        /*
+          https://azure.microsoft.com/en-us/documentation/articles/vs-storage-aspnet5-getting-started-tables/
+          You can insert multiple entities into a table in a single write operation. The following code example creates two entity objects ("Jeff Smith" and "Ben Smith"), adds them to a TableBatchOperation object using the Insert method, and then starts the operation by calling CloudTable.ExecuteBatchAsync.
+        */
+        public async Task InsertBatch()
+        {
+            Log.LogInformation("InsertBatch");
+            // Create the batch operation.
+            TableBatchOperation batchOperation = new TableBatchOperation();
+            // Create a customer entity and add it to the table.
+            CustomerEntity customer1 = Customer.CreateCustomerEntity();
+            customer1.PartitionKey = "Smith";
+            // Create another customer entity and add it to the table.
+            CustomerEntity customer2 = Customer.CreateCustomerEntity();
+            customer2.PartitionKey = "Smith";
+            // Add both customer entities to the batch insert operation.
+            batchOperation.Insert(customer1);
+            batchOperation.Insert(customer2);
+            // Execute the batch operation.
+            var results = await peopleTable.ExecuteBatchAsync(batchOperation);
+            if (results.Any())
+            {
+                Log.LogInformation("Inserted");
+                foreach (var result in results)
+                {
+                    Log.LogInformation("Added: " + JsonConvert.SerializeObject(result.Result));
+                }
+            }
+        }
         //
         private AzureStorageOptions Options { get; }
         CloudTable peopleTable = null;
