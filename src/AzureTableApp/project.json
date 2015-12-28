@@ -1,39 +1,39 @@
 {
-	"version": "1.0.0-*",
-	"description": "AzureTableApp Console Application",
-	"userSecretsId": "aspnet5-AzureTableApp-c24e84ab-18e7-4fe7-b919-b98d7081445c",
-	"authors": [
-		"@peterblazejewicz"
-	],
-	"tags": [
-		"Azure",
-		"Azure Storage",
-		"Azure Storage Table"
-	],
-	"compilationOptions": {
-		"emitEntryPoint": true
-	},
-	"tooling": {
-		"defaultNamespace": "AzureTableApp"
-	},
-	"dependencies": {
-		"Microsoft.Extensions.Configuration.UserSecrets": "1.0.0-rc1-final",
-		"Microsoft.Extensions.Configuration.Binder": "1.0.0-rc1-final",
-		"Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final",
-		"Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
-		"Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
-		"Microsoft.Extensions.SecretManager": "1.0.0-rc1-final",
-		"Microsoft.Extensions.Logging": "1.0.0-rc1-final",
-		"Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
-		"WindowsAzure.Storage": "6.2.2-preview",
-		"Newtonsoft.Json": "8.0.1-beta3",
-		"FluentCommandLineParser": "1.4.3",
-		"GenFu": "1.0.4"
-	},
-	"commands": {
-		"run": "AzureTableApp"
-	},
-	"frameworks": {
-		"dnx451": {}
-	}
+  "version": "1.0.0-*",
+  "description": "AzureTableApp Console Application",
+  "userSecretsId": "aspnet5-AzureTableApp-c24e84ab-18e7-4fe7-b919-b98d7081445c",
+  "authors": [
+    "@peterblazejewicz"
+  ],
+  "tags": [
+    "Azure",
+    "Azure Storage",
+    "Azure Storage Table"
+  ],
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+  "tooling": {
+    "defaultNamespace": "AzureTableApp"
+  },
+  "dependencies": {
+    "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.Binder": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration": "1.0.0-rc1-final",
+    "Microsoft.Extensions.SecretManager": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
+    "WindowsAzure.Storage": "6.2.2-preview",
+    "Newtonsoft.Json": "8.0.1-beta3",
+    "FluentCommandLineParser": "1.4.3",
+    "GenFu": "1.0.4"
+  },
+  "commands": {
+    "run": "AzureTableApp"
+  },
+  "frameworks": {
+    "dnx451": {}
+  }
 }
