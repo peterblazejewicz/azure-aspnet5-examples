@@ -1,6 +1,9 @@
 # Azure ASP.NET5 Examples
 
 Various examples for MS Azure using ASP.NET 5.
+They are ready to use. Just clone repo, restore dependencies and run.
+
+Note that command line examples use [Fluent Command Line Parser](https://github.com/fclp/fluent-command-line-parser). For this reason console applications do not support CoreCLR yet (the CoreCLR has been removed as supported framework from project files).
 
 ## Examples
 
@@ -18,6 +21,18 @@ The example takes some code ideas and parts from:
 - [Microsoft Azure Storage Queues Part 2: Hands on Working with Queues](http://justazure.com/microsoft-azure-storage-queues-part-2-working-queues/)
 - [Azure Queues 103 -  Batch Processing with Mark Simms](https://channel9.msdn.com/Shows/Azure-Friday/Azure-Queues-103-Batch-Processing-with-Mark-Simms)
 
+### [Azure Storage Table](/src/AzureTableApp)
+
+Example ASP.NET5 console application demonstrates following topics:
+- Azure Storage Table operations
+- Async/Await patterns
+- Configuration
+- User Secrets
+- commandline arguments
+
+The example takes some code ideas and parts from:
+- [How to get started with Azure Table storage and Visual Studio connected services](https://azure.microsoft.com/en-us/documentation/articles/vs-storage-aspnet5-getting-started-tables/)
+The source code implementation differs in some points from article's snippets.
 
 ### :construction: [DocumentDb ToDoApp](/src/ToDoApp) [WIP]
 
