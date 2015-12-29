@@ -51,6 +51,9 @@ namespace AzureTableApp
                     case Operation.AllEntities:
                         await app.AllEntities();
                         break;
+                    case Operation.DeleteEntity:
+                        await app.DeleteEntity();
+                        break;
                     case Operation.InsertBatch:
                         await app.InsertBatch();
                         break;
@@ -82,6 +85,7 @@ namespace AzureTableApp
 Options:
 -o/--operation AddEntity		Adds Customer entity to storage table
 -o/--operation AllEntities	Lists all entities in storage table
+-o/--operation DeleteEntity	Deletes Customer entity from storage table
 -o/--operation InsertBatch  Adds batch of Customer entities
 -o/--operation SingleEntity Gets single Customer entity from table
 -h/--help				Shows usage information";

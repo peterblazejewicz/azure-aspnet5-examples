@@ -9,5 +9,6 @@ namespace AzureTableApp.Models
     InsertBatch = 2,
     AllEntities = 3,
     SingleEntity = 4,
+    DeleteEntity = 5,
     }
 }

@@ -15,6 +15,7 @@ namespace AzureTableApp
         Task<IApplication> InitializeAsync();
         Task AddEntity();
         Task AllEntities();
+        Task DeleteEntity();
         Task InsertBatch();
         Task SingleEntity();
     }
@@ -72,12 +73,12 @@ namespace AzureTableApp
         */
         public async Task AllEntities()
         {
-          // Construct the query operation for all customer entities where PartitionKey="Smith".
-          TableQuery<CustomerEntity> query = new TableQuery<CustomerEntity>()
-            .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "Smith"));
-          // Print the fields for each customer.
-          TableContinuationToken token = null;
-          do
+            // Construct the query operation for all customer entities where PartitionKey="Smith".
+            TableQuery<CustomerEntity> query = new TableQuery<CustomerEntity>()
+              .Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, "Smith"));
+            // Print the fields for each customer.
+            TableContinuationToken token = null;
+            do
             {
                 TableQuerySegment<CustomerEntity> resultSegment = await peopleTable.ExecuteQuerySegmentedAsync(query, token);
                 token = resultSegment.ContinuationToken;
@@ -86,6 +87,34 @@ namespace AzureTableApp
                     Log.LogInformation($"{entity.PartitionKey}, {entity.RowKey}\t{entity.Email}\t{entity.PhoneNumber}");
                 }
             } while (token != null);
+        }
+        /*
+          https://azure.microsoft.com/en-us/documentation/articles/vs-storage-aspnet5-getting-started-tables/
+          You can delete an entity after you find it. The following code looks for a customer entity named "Ben Smith" and if it finds it, it deletes it.
+        */
+        public async Task DeleteEntity()
+        {
+            Log.LogInformation("DeleteEntity");
+            // Create a retrieve operation that expects a customer entity.
+            TableOperation retrieveOperation = TableOperation.Retrieve<CustomerEntity>("Smith", "Bennett");
+            // Execute the operation.
+            TableResult retrievedResult = await peopleTable.ExecuteAsync(retrieveOperation);
+            if (retrievedResult.Result != null)
+            {
+                // Assign the result to a CustomerEntity object.
+                CustomerEntity deleteEntity = (CustomerEntity)retrievedResult.Result;
+                // Create the Delete TableOperation and then execute it.
+                Log.LogInformation($"Found: {deleteEntity.PartitionKey}, {deleteEntity.RowKey}\t{deleteEntity.Email}\t{deleteEntity.PhoneNumber}");
+                TableOperation deleteOperation = TableOperation.Delete(deleteEntity);
+                // Execute the operation.
+                var deleteResults = await peopleTable.ExecuteAsync(deleteOperation);
+                Log.LogInformation(JsonConvert.SerializeObject(deleteResults));
+                Log.LogInformation("Entity deleted.");
+            }
+            else
+            {
+                Log.LogWarning("Couldn't delete the entity.");
+            }
         }
         /*
           https://azure.microsoft.com/en-us/documentation/articles/vs-storage-aspnet5-getting-started-tables/
@@ -122,19 +151,21 @@ namespace AzureTableApp
         */
         public async Task SingleEntity()
         {
-          Log.LogInformation("SingleEntity");
-          // Create a retrieve operation that takes a customer entity.
-          TableOperation retrieveOperation = TableOperation.Retrieve<CustomerEntity>("Smith", "Bennett");
-          // Execute the retrieve operation.
-          TableResult retrievedResult = await peopleTable.ExecuteAsync(retrieveOperation);
-          // Print the phone number of the result.
-          if (retrievedResult.Result != null) {
-            CustomerEntity customer = (CustomerEntity)retrievedResult.Result;
-            Log.LogInformation($"Retrieved phone number: {customer.PhoneNumber}");            
-          } else 
-          {
-            Log.LogWarning("The phone number could not be retrieved."); 
-          }
+            Log.LogInformation("SingleEntity");
+            // Create a retrieve operation that takes a customer entity.
+            TableOperation retrieveOperation = TableOperation.Retrieve<CustomerEntity>("Smith", "Bennett");
+            // Execute the retrieve operation.
+            TableResult retrievedResult = await peopleTable.ExecuteAsync(retrieveOperation);
+            // Print the phone number of the result.
+            if (retrievedResult.Result != null)
+            {
+                CustomerEntity customer = (CustomerEntity)retrievedResult.Result;
+                Log.LogInformation($"Retrieved phone number: {customer.PhoneNumber}");
+            }
+            else
+            {
+                Log.LogWarning("The phone number could not be retrieved.");
+            }
         }
         //
         private AzureStorageOptions Options { get; }
