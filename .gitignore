@@ -200,3 +200,6 @@ src/tasklist/
 
 # No NodeJS API (Swagger) based contact list yet
 src/app-service-api-node-contact-list/
+
+# No basic ASP.NET 5 Web App - it's just example project pushed to Azure
+src/AzureBasicWebApp
