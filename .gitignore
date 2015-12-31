@@ -197,3 +197,6 @@ FakesAssemblies/
 
 # NodeJS sample tasklist playground project
 src/tasklist/
+
+# No NodeJS API (Swagger) based contact list yet
+src/app-service-api-node-contact-list/
