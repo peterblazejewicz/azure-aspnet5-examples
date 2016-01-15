@@ -18,21 +18,26 @@ namespace QueueGettingStarted
             // options
             ConfigurationBinder.Bind(Configuration.GetSection("Azure:Storage"), Options);
             Console.WriteLine("Queue encryption sample");
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse("");
+            Console.WriteLine($"Configuration for ConnectionString: {Options.ConnectionString}");
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Options.ConnectionString);
             CloudQueueClient client = storageAccount.CreateCloudQueueClient();
-            if(client != null){
+            if (client != null)
+            {
                 Console.WriteLine("Client created");
-            } else {
+            }
+            else
+            {
                 Console.WriteLine("Error creating client");
             }
             Console.ReadKey();
         }
-        
+
         static IConfiguration Configuration { get; set; }
-        static AzureStorageOptions Options {get; set; } = new AzureStorageOptions();
+        static AzureStorageOptions Options { get; set; } = new AzureStorageOptions();
     }
-    
-    class AzureStorageOptions {
+
+    class AzureStorageOptions
+    {
         public string ConnectionString { get; set; }
     }
 }
