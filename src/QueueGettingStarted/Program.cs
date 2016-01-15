@@ -39,6 +39,22 @@ namespace QueueGettingStarted
             try
             {
                 await queue.CreateAsync();
+                string messageStr = Guid.NewGuid().ToString();
+                CloudQueueMessage message = new CloudQueueMessage(messageStr);
+                // Add message
+                Console.WriteLine($"Inserting the message: {message}");
+                await queue.AddMessageAsync(message, null, null, null, null);
+                // Retrieve message
+                Console.WriteLine("Retrieving the message.");
+                CloudQueueMessage retrMessage = await queue.GetMessageAsync();
+                // Update message
+                Console.WriteLine("Updating the message.");
+                string updatedMessage = Guid.NewGuid().ToString("N");
+                retrMessage.SetMessageContent(updatedMessage);
+                await queue.UpdateMessageAsync(retrMessage, TimeSpan.FromSeconds(0), MessageUpdateFields.Content | MessageUpdateFields.Visibility, null, null);
+                // Retrieve updated message
+                Console.WriteLine("Retrieving the updated encrypted message.");
+                retrMessage = await queue.GetMessageAsync();
             }
             finally
             {
