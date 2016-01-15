@@ -3,12 +3,23 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace QueueGettingStarted
 {
     public class Program
     {
         public static void Main(string[] args)
+        {
+            AsyncTask(args)
+                .ContinueWith((task) =>
+                {
+                    Console.WriteLine("Press any key to exit...");
+                    Console.ReadKey();
+                }).Wait();
+        }
+
+        public async static Task AsyncTask(string[] args)
         {
             // configuration
             var builder = new ConfigurationBuilder()
@@ -23,9 +34,17 @@ namespace QueueGettingStarted
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Options.ConnectionString);
             CloudQueueClient client = storageAccount.CreateCloudQueueClient();
             Debug.Assert(client != null, "Client created");
-            Console.WriteLine("Client created");
-            Console.WriteLine($"queue: {Options.DemoQueue}");
-            Console.ReadKey();
+            string hash = Guid.NewGuid().ToString("N");
+            CloudQueue queue = client.GetQueueReference($"{Options.DemoQueue}{hash}");
+            try
+            {
+                await queue.CreateAsync();
+            }
+            finally
+            {
+                bool deleted = await queue.DeleteIfExistsAsync();
+                Console.WriteLine($"Queue deleted: {deleted}");
+            }
         }
 
         static IConfiguration Configuration { get; set; }
