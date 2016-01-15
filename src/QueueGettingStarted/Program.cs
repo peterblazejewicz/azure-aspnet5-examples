@@ -2,6 +2,7 @@ using System;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Queue;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics;
 
 namespace QueueGettingStarted
 {
@@ -21,14 +22,9 @@ namespace QueueGettingStarted
             Console.WriteLine($"Configuration for ConnectionString: {Options.ConnectionString}");
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(Options.ConnectionString);
             CloudQueueClient client = storageAccount.CreateCloudQueueClient();
-            if (client != null)
-            {
-                Console.WriteLine("Client created");
-            }
-            else
-            {
-                Console.WriteLine("Error creating client");
-            }
+            Debug.Assert(client != null, "Client created");
+            Console.WriteLine("Client created");
+            Console.WriteLine($"queue: {Options.DemoQueue}");
             Console.ReadKey();
         }
 
@@ -39,5 +35,6 @@ namespace QueueGettingStarted
     class AzureStorageOptions
     {
         public string ConnectionString { get; set; }
+        public string DemoQueue { get; set; }
     }
 }
